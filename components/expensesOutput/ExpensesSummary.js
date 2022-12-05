@@ -5,7 +5,7 @@ export default function ExpensesSummary({ expenses, periodName }) {
 
   //find sum of all expenses
   //starting value is 0 (second param)
-  const expensesSum = expense.reduce((sum, expense) => {
+  const expensesSum = expenses.reduce((sum, expense) => {
     return sum + expense.amount
   }, 0)
 
