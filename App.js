@@ -9,6 +9,7 @@ import ManageExpense from './screens/ManageExpense';
 import RecentExpenses from './screens/RecentExpenses';
 import AllExpenses from './screens/AllExpenses';
 import { GlobalStyles } from './constants/styles';
+import IconButton from './components/UI/IconButton';
 
 //holds object with two components -> navigator component and one to register screens
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ function ExpensesOverview() {
     headerTintColor: 'white',
     tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
     tabBarActiveTintColor: GlobalStyles.colors.accent500,
+    headerRight: ({tintColor}) => <IconButton icon='add' size={24} color={tintColor} />
 
   }}>
     <BottomTabs.Screen
