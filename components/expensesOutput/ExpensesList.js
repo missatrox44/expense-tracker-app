@@ -1,6 +1,6 @@
 import { FlatList } from 'react-native'
 import React from 'react'
-import ExpenseItem from '../ExpenseItem'
+import ExpenseItem from './ExpenseItem'
 
 //access to single item in array
 function renderExpenseItem(itemData) {

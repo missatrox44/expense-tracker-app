@@ -18,14 +18,25 @@ const BottomTabs = createBottomTabNavigator();
 //nested navigation component
 function ExpensesOverview() {
   //use screenOptions to style BOTH tabs to have same styles
-  return <BottomTabs.Navigator screenOptions={{
-    headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-    headerTintColor: 'white',
-    tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-    tabBarActiveTintColor: GlobalStyles.colors.accent500,
-    headerRight: ({tintColor}) => <IconButton icon='add' size={24} color={tintColor} />
-
-  }}>
+  //screenoptions can also take in function and return configuration object
+  return <BottomTabs.Navigator
+    screenOptions={({ navigation }) => ({
+      headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+      headerTintColor: 'white',
+      tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+      tabBarActiveTintColor: GlobalStyles.colors.accent500,
+      headerRight: ({ tintColor }) => (
+        <IconButton
+          icon='add'
+          size={24}
+          color={tintColor}
+          // plus icon can open manageExpense screen
+          onPress={() => {
+            navigation.navigate('ManageExpense');
+          }}
+        />
+      ),
+    })}>
     <BottomTabs.Screen
       name='RecentExpenses'
       component={RecentExpenses}
