@@ -21,11 +21,19 @@ export default function ManageExpense({ route, navigation }) {
     })
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() { }
+  //all three functions should close modal
+  function deleteExpenseHandler() {
+    navigation.goBack();
+   }
 
-  function cancelHandler() { }
+  function cancelHandler() {
+    //goBack method essentially back button
+    navigation.goBack();
+   }
 
-  function confirmHandler() { }
+  function confirmHandler() {
+    navigation.goBack();
+   }
 
   return (
     <View style={styles.container}>
