@@ -1,6 +1,7 @@
-import { View, Text } from 'react-native'
-import React, { useLayoutEffect } from 'react'
-
+import { View, StyleSheet } from 'react-native';
+import React, { useLayoutEffect } from 'react';
+import { GlobalStyles } from '../constants/styles';
+import IconButton from '../components/UI/IconButton';
 
 //add two 'modes' of this screen
 //if have expense id -> editing
@@ -19,9 +20,40 @@ export default function ManageExpense({ route, navigation }) {
     })
   }, [navigation, isEditing]);
 
+  function deleteExpenseHandler() { }
+
   return (
-    <View>
-      <Text>ManageExpense</Text>
+    <View style={styles.container}>
+      {isEditing && (
+        <View style={styles.deleteContainer}>
+          <IconButton
+            icon='trash'
+            color={GlobalStyles.colors.error500}
+            size={36}
+            onPress={deleteExpenseHandler} />
+        </View>
+      )}
     </View>
   )
 }
+
+//want to add three buttons
+//1. close modal w/o doing anything
+//2. close modal while adding new element
+//3. deleting expense
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: GlobalStyles.colors.primary800
+  },
+  deleteContainer: {
+    marginTop: 16,
+    paddingTop: 8,
+    borderTopWidth: 2,
+    borderTopColor: GlobalStyles.colors.primary200,
+    alignItems: 'center'
+  }
+})
