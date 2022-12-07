@@ -2,6 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import React, { useLayoutEffect } from 'react';
 import { GlobalStyles } from '../constants/styles';
 import IconButton from '../components/UI/IconButton';
+import Button from '../components/UI/Button';
 
 //add two 'modes' of this screen
 //if have expense id -> editing
@@ -22,8 +23,16 @@ export default function ManageExpense({ route, navigation }) {
 
   function deleteExpenseHandler() { }
 
+  function cancelHandler() { }
+
+  function confirmHandler() { }
+
   return (
     <View style={styles.container}>
+      <View style={styles.buttons}>
+        <Button style={styles.button} mode='flat' onPress={cancelHandler}>Cancel</Button>
+        <Button style={styles.button} onPress={confirmHandler}>{isEditing ? 'Update' : 'Add'}</Button>
+      </View>
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -55,5 +64,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderTopColor: GlobalStyles.colors.primary200,
     alignItems: 'center'
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8
   }
 })
