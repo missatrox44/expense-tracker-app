@@ -16,6 +16,9 @@ export default function RecentExpenses() {
 
   })
   return (
-    <ExpensesOutput expenses={recentExpenses} expensesPeriod='Last 7 Days' />
+    <ExpensesOutput 
+    expenses={recentExpenses} 
+    expensesPeriod='Last 7 Days' 
+    fallbackText='Saving up for that Kendrick Tour eh?'/>
   )
 }

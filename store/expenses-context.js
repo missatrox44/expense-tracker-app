@@ -39,39 +39,21 @@ const DUMMY_EXPENSES = [
   },
   {
     id: 'e7',
-    description: 'A pair of shoes',
-    amount: 59.99,
+    description: 'Another pair of shoes',
+    amount: 69.99,
     date: new Date('2021-10-04')
   },
   {
     id: 'e8',
-    description: 'Macbook',
-    amount: 2000.00,
-    date: new Date('2022-11-14')
+    description: 'Taylor Swift Tickets',
+    amount: 1999.99,
+    date: new Date('2022-12-14')
   },
   {
     id: 'e9',
-    description: 'Cocktail Dress',
-    amount: 85.98,
+    description: 'Plane Tickets',
+    amount: 300.98,
     date: new Date('2022-12-05')
-  },
-  {
-    id: 'e10',
-    description: 'Bunch of bananas',
-    amount: 4.99,
-    date: new Date('2021-03-08')
-  },
-  {
-    id: 'e11',
-    description: 'A book',
-    amount: 14.99,
-    date: new Date('2022-02-19')
-  },
-  {
-    id: 'e12',
-    description: 'Another book',
-    amount: 38.89,
-    date: new Date('2022-07-23')
   },
 ];
 
