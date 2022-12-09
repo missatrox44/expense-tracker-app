@@ -1,14 +1,17 @@
 import { View, StyleSheet } from 'react-native';
-import React, { useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect } from 'react';
 import { GlobalStyles } from '../constants/styles';
 import IconButton from '../components/UI/IconButton';
 import Button from '../components/UI/Button';
+import { ExpensesContext } from '../store/expenses-context';
 
 //add two 'modes' of this screen
 //if have expense id -> editing
 //if no expense id -> adding
 //route prop provided by Navigation and can use to extract id parameter
 export default function ManageExpense({ route, navigation }) {
+  //create context reference here to access handler functions
+  const expensesCtx = useContext(ExpensesContext);
   //find out why it was to open: edit or add?
   //if params defined get expenseId
   const editedExpenseId = route.params?.expenseId
@@ -23,17 +26,20 @@ export default function ManageExpense({ route, navigation }) {
 
   //all three functions should close modal
   function deleteExpenseHandler() {
+    //order of function call doesnt matter since it runs synchronously
+    expensesCtx.deleteExpense(editedExpenseId);
     navigation.goBack();
-   }
+    
+  }
 
   function cancelHandler() {
     //goBack method essentially back button
     navigation.goBack();
-   }
+  }
 
   function confirmHandler() {
     navigation.goBack();
-   }
+  }
 
   return (
     <View style={styles.container}>
