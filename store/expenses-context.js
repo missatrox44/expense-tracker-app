@@ -5,7 +5,7 @@ const DUMMY_EXPENSES = [
     id: 'e1',
     description: 'A pair of shoes',
     amount: 59.99,
-    date: new Date('2021-10-04')
+    date: new Date('2022-12-08')
   },
   {
     id: 'e2',
@@ -79,6 +79,7 @@ export const ExpensesContext = createContext({
   //initial value - shape of context data
   expenses: [],
   //expect to get data from object
+  //methods to update expenses array
   addExpense: ({ description, amount, date }) => { },
   deleteExpense: (id) => { },
   updateExpense: (id, { description, amount, date }) => { },
@@ -89,19 +90,20 @@ export const ExpensesContext = createContext({
 function expensesReducer(state, action) {
   //check type of action received
   //must match dispatch function (could be type, mode, kind etc)
+
   switch (action.type) {
     case 'ADD':
       const id = new Date().toString() + Math.random().toString();
-      //make sure state updated in immutable way
+      //make sure state updated in immutable way -> put in array
       return [{ ...action.payload, id: id }, ...state]
     case 'UPDATE':
       const updatableExpenseIndex = state.findIndex(
         (expense) => expense.id === action.payload.id);
-        const updatableExpense = state[updatableExpenseIndex];
-        const updatedItem = {...updatableExpense, ...action.payload.data};
-        const updatedExpenses = [...state];
-        updatedExpenses[updatableExpenseIndex] = updatedItem
-        return updatedExpenses;
+      const updatableExpense = state[updatableExpenseIndex];
+      const updatedItem = { ...updatableExpense, ...action.payload.data };
+      const updatedExpenses = [...state];
+      updatedExpenses[updatableExpenseIndex] = updatedItem;
+      return updatedExpenses;
     case 'DELETE':
       return state.filter((expense) => expense.id !== action.payload);
     default:
@@ -128,15 +130,21 @@ function ExpensesContextProvider({ children }) {
     dispatch({ type: 'UPDATE', payload: { id: id, data: expenseData } });
   }
 
+  //make available for all interested components
+  const value = {
+    expenses: expensesState,
+    addExpense: addExpense,
+    deleteExpense: deleteExpense,
+    updateExpense: updateExpense
+  };
+
   return (
-    <ExpensesContext.Provider>{children}</ExpensesContext.Provider>
+    <ExpensesContext.Provider value={value}>{children}</ExpensesContext.Provider>
   )
 }
 
 
 export default ExpensesContextProvider;
-
-
 
 //useReducer needs reducer function
 //payload - data received
