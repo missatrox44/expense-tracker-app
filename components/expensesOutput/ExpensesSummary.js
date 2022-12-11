@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { GlobalStyles } from '../../constants/styles';
 import React from 'react';
 
-function ExpensesSummary({ expenses, periodName }) {
+export default function ExpensesSummary({ expenses, periodName }) {
   //find sum of all expenses
   //starting value is 0 (second param)
   const expensesSum = expenses.reduce((sum, expense) => {
@@ -18,7 +18,7 @@ function ExpensesSummary({ expenses, periodName }) {
   )
 }
 
-export default ExpensesSummary;
+// export default ExpensesSummary;
 
 
 const styles = StyleSheet.create({

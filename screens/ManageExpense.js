@@ -39,7 +39,7 @@ export default function ManageExpense({ route, navigation }) {
   function confirmHandler() {
     //since same handler for update/add -> first check mode
     if (isEditing) {
-      expensesCtx.updateExpense(editedExpenseId, {description: 'Edit Item Test', amount: 29.99, date: new Date('2022-12-07')});
+      expensesCtx.updateExpense(editedExpenseId, {description: 'Update Item Test', amount: 29.99, date: new Date('2022-12-07')});
     } else {
       expensesCtx.addExpense({description: 'Add Item Test', amount: 19.99, date: new Date('2022-12-08')});
     }
