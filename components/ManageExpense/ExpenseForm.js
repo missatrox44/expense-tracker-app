@@ -1,11 +1,29 @@
 import { View, StyleSheet, Text } from 'react-native'
-import React from 'react';
+import { useState } from 'react';
 
 import Input from './Input';
 
 export default function ExpenseForm() {
+  //when you fetch input value -> it is a string no matter what
+  //set three different inputValue types instead of creating three slices of state w/ each
+const [inputValues, setInputValues] = useState({
+  amount: '',
+  date: '',
+  description: ''
+});
+
   //function to register keystrokes and save in some state for later
-  function amountChangedHandler() { }
+  //inputIdentifier refers to amount/date/description
+  function inputChangedHandler(inputIdentifier, enteredValue) {
+    setInputValues((curInputValues) => {
+      return {
+        ...curInputValues,
+        [inputIdentifier]: enteredValue
+      }
+    });
+   }
+
+
 
   return (
     <View style={styles.form}>
@@ -16,7 +34,9 @@ export default function ExpenseForm() {
           label='Amount'
           textInputConfig={{
             keyboardType: 'decimal-pad',
-            onChangeText: amountChangedHandler,
+            onChangeText: inputChangedHandler.bind(this, 'amount'),
+            //set up two way binding 
+            value: inputValues.amount
           }} />
         <Input
           style={styles.rowInput}
@@ -24,11 +44,14 @@ export default function ExpenseForm() {
           textInputConfig={{
             placeholder: 'YYYY-MM-DD',
             maxLength: 10,
-            onChangeText: () => { }
+            onChangeText: inputChangedHandler.bind(this, 'date'),
+            value: inputValues.date,
           }} />
       </View>
       <Input label='Description' textInputConfig={{
         multiline: true,
+        onChangeText: inputChangedHandler.bind(this, 'description'),
+        value: inputValues.description,
       }} />
     </View>
   )
