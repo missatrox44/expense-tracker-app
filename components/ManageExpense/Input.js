@@ -4,7 +4,7 @@ import { GlobalStyles } from '../../constants/styles';
 
 //view around label and custom input container
 //label should be configurable -> destructure props
-export default function Input({ label, style, textInputConfig }) {
+export default function Input({ label, invalid, style, textInputConfig }) {
   //set to array of styles
   const inputStyles = [styles.input];
   //push multiline style to array of styles IF multiline input true
@@ -12,9 +12,12 @@ export default function Input({ label, style, textInputConfig }) {
     inputStyles.push(styles.inputMultiline)
   }
 
+  if (invalid) {
+    inputStyles.push(styles.invalidInput)
+  }
   return (
     <View style={[styles.inputContainer, style]}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, invalid && styles.invalidLabel]}>{label}</Text>
       <TextInput style={inputStyles} {...textInputConfig} />
     </View>
   );
@@ -44,5 +47,11 @@ const styles = StyleSheet.create({
     minHeight: 100,
     //sets same look/behaviors on both platforms
     textAlignVertical: 'top'
+  },
+  invalidLabel: {
+    color: GlobalStyles.colors.error500,
+  },
+  invalidInput: {
+   backgroundColor: GlobalStyles.colors.error50
   }
 })

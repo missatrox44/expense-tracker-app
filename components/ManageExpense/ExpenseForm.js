@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Input from './Input';
 import Button from '../UI/Button';
 import { getFormattedDate } from '../../util/date';
+import { GlobalStyles } from '../../constants/styles';
 
 export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
   //when you fetch input value -> it is a string no matter what
@@ -78,6 +79,7 @@ export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, def
         <Input
           style={styles.rowInput}
           label='Amount'
+          invalid={!inputs.amount.isValid}
           textInputConfig={{
             keyboardType: 'decimal-pad',
             //pre-configure function for future execution by bind method
@@ -88,6 +90,7 @@ export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, def
         <Input
           style={styles.rowInput}
           label='Date'
+          invalid={!inputs.date.isValid}
           textInputConfig={{
             placeholder: 'YYYY-MM-DD',
             maxLength: 10,
@@ -95,12 +98,15 @@ export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, def
             value: inputs.date.value,
           }} />
       </View>
-      <Input label='Description' textInputConfig={{
+      <Input 
+      label='Description' 
+      invalid={!inputs.description.isValid}
+      textInputConfig={{
         multiline: true,
         onChangeText: inputChangedHandler.bind(this, 'description'),
         value: inputs.description.value,
       }} />
-      {formIsInvalid && <Text>Invalid input values - please check your entered data!</Text>}
+      {formIsInvalid && <Text style={styles.errorText}>Invalid input values - please check your entered data!</Text>}
       <View style={styles.buttons}>
         <Button style={styles.button} mode='flat' onPress={onCancel}>Cancel</Button>
         <Button style={styles.button} onPress={submitHandler}>{submitButtonLabel}</Button>
@@ -142,6 +148,11 @@ const styles = StyleSheet.create({
   button: {
     minWidth: 120,
     marginHorizontal: 8
+  },
+  errorText: {
+    textAlign: 'center',
+    color: GlobalStyles.colors.error500,
+    margin: 8
   }
 })
 
