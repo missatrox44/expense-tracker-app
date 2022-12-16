@@ -4,14 +4,14 @@ import { useState } from 'react';
 import Input from './Input';
 import Button from '../UI/Button';
 
-export default function ExpenseForm({onCancel, onSubmit, submitButtonLabel}) {
+export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel }) {
   //when you fetch input value -> it is a string no matter what
   //set three different inputValue types instead of creating three slices of state w/ each
-const [inputValues, setInputValues] = useState({
-  amount: '',
-  date: '',
-  description: ''
-});
+  const [inputValues, setInputValues] = useState({
+    amount: '',
+    date: '',
+    description: ''
+  });
 
   //function to register keystrokes and save in some state for later
   //inputIdentifier refers to amount/date/description
@@ -23,10 +23,21 @@ const [inputValues, setInputValues] = useState({
         [inputIdentifier]: enteredValue
       }
     });
-   }
+  }
 
-   function submitHandler() {}
- 
+  //collect all input values and transform them
+  function submitHandler() {
+    const expenseData = {
+      //converts string to number
+      amount: +inputValues.amount,
+      //converts string input to date value
+      date: new Date(inputValues.date),
+      description: inputValues.description
+    };
+
+    onSubmit(expenseData);
+  }
+
 
   return (
     <View style={styles.form}>
