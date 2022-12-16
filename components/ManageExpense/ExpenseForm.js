@@ -8,21 +8,31 @@ import { getFormattedDate } from '../../util/date';
 export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, defaultValues }) {
   //when you fetch input value -> it is a string no matter what
   //set three different inputValue types instead of creating three slices of state w/ each
-  const [inputValues, setInputValues] = useState({
-    amount: defaultValues ? defaultValues.amount.toString() : '',
-    date: defaultValues ? getFormattedDate(defaultValues.date) : '',
-    description: defaultValues ? defaultValues.description : ''
+  //set isValid: true to ensure that error message wont render when initially adding a new item. validity is checked when user submits form anyway
+  const [inputs, setInputs] = useState({
+    amount: {
+      value: defaultValues ? defaultValues.amount.toString() : '',
+      isValid: true
+    },
+    date: {
+      value: defaultValues ? getFormattedDate(defaultValues.date) : '',
+      isValid: true
+    },
+    description: {
+      value: defaultValues ? defaultValues.description : '',
+      isValid: true
+    }
   });
 
   //function to register keystrokes and save in some state for later
   //inputIdentifier refers to amount/date/description
   //inputIdentifer in brackets allows to set and target a property dynamically
   function inputChangedHandler(inputIdentifier, enteredValue) {
-    setInputValues((curInputValues) => {
+    setInputs((curInputs) => {
       return {
-        ...curInputValues,
-        [inputIdentifier]: enteredValue
-      }
+        ...curInputs,
+        [inputIdentifier]: { value: enteredValue, isValid: true }
+      };
     });
   }
 
@@ -30,10 +40,10 @@ export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, def
   function submitHandler() {
     const expenseData = {
       //converts string to number
-      amount: +inputValues.amount,
+      amount: +inputs.amount.value,
       //converts string input to date value
-      date: new Date(inputValues.date),
-      description: inputValues.description
+      date: new Date(inputs.date.value),
+      description: inputs.description.value
     };
     //add validation - helper constants
     const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0
@@ -41,13 +51,25 @@ export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, def
     const descriptionIsValid = expenseData.description.trim().length > 0;
 
     if (!amountIsValid || !dateIsValid || !descriptionIsValid) {
-      Alert.alert('Invalid input', 'Please check your input values');
+      // Alert.alert('Invalid input', 'Please check your input values');
+      setInputs((curInputs) => {
+        return {
+          amount: { value: curInputs.amount.value, isValid: amountIsValid },
+          date: { value: curInputs.date.value, isValid: dateIsValid },
+          description: { value: curInputs.description.value, isValid: descriptionIsValid }
+        }
+      })
       return;
     }
 
     onSubmit(expenseData);
   }
 
+  //helper const to check if any of the inputs are invalid
+  const formIsInvalid =
+    !inputs.amount.isValid ||
+    !inputs.date.isValid ||
+    !inputs.description.isValid
 
   return (
     <View style={styles.form}>
@@ -61,7 +83,7 @@ export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, def
             //pre-configure function for future execution by bind method
             onChangeText: inputChangedHandler.bind(this, 'amount'),
             //set up two way binding 
-            value: inputValues.amount
+            value: inputs.amount.value
           }} />
         <Input
           style={styles.rowInput}
@@ -70,14 +92,15 @@ export default function ExpenseForm({ onCancel, onSubmit, submitButtonLabel, def
             placeholder: 'YYYY-MM-DD',
             maxLength: 10,
             onChangeText: inputChangedHandler.bind(this, 'date'),
-            value: inputValues.date,
+            value: inputs.date.value,
           }} />
       </View>
       <Input label='Description' textInputConfig={{
         multiline: true,
         onChangeText: inputChangedHandler.bind(this, 'description'),
-        value: inputValues.description,
+        value: inputs.description.value,
       }} />
+      {formIsInvalid && <Text>Invalid input values - please check your entered data!</Text>}
       <View style={styles.buttons}>
         <Button style={styles.button} mode='flat' onPress={onCancel}>Cancel</Button>
         <Button style={styles.button} onPress={submitHandler}>{submitButtonLabel}</Button>
