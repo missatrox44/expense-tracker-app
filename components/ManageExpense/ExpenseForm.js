@@ -2,8 +2,9 @@ import { View, StyleSheet, Text } from 'react-native'
 import { useState } from 'react';
 
 import Input from './Input';
+import Button from '../UI/Button';
 
-export default function ExpenseForm() {
+export default function ExpenseForm({onCancel, onSubmit, submitButtonLabel}) {
   //when you fetch input value -> it is a string no matter what
   //set three different inputValue types instead of creating three slices of state w/ each
 const [inputValues, setInputValues] = useState({
@@ -14,6 +15,7 @@ const [inputValues, setInputValues] = useState({
 
   //function to register keystrokes and save in some state for later
   //inputIdentifier refers to amount/date/description
+  //inputIdentifer in brackets allows to set and target a property dynamically
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputValues((curInputValues) => {
       return {
@@ -23,7 +25,8 @@ const [inputValues, setInputValues] = useState({
     });
    }
 
-
+   function submitHandler() {}
+ 
 
   return (
     <View style={styles.form}>
@@ -34,6 +37,7 @@ const [inputValues, setInputValues] = useState({
           label='Amount'
           textInputConfig={{
             keyboardType: 'decimal-pad',
+            //pre-configure function for future execution by bind method
             onChangeText: inputChangedHandler.bind(this, 'amount'),
             //set up two way binding 
             value: inputValues.amount
@@ -53,6 +57,10 @@ const [inputValues, setInputValues] = useState({
         onChangeText: inputChangedHandler.bind(this, 'description'),
         value: inputValues.description,
       }} />
+      <View style={styles.buttons}>
+        <Button style={styles.button} mode='flat' onPress={onCancel}>Cancel</Button>
+        <Button style={styles.button} onPress={submitHandler}>{submitButtonLabel}</Button>
+      </View>
     </View>
   )
 }
@@ -81,5 +89,16 @@ const styles = StyleSheet.create({
     color: 'white',
     marginVertical: 24,
     textAlign: 'center'
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8
   }
 })
+
+
