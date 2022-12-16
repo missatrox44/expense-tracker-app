@@ -22,3 +22,5 @@ export default function RecentExpenses() {
     fallbackText='Saving up for that Kendrick Tour eh?'/>
   )
 }
+
+//fetch request to view expenses

@@ -28,6 +28,7 @@ export default function ManageExpense({ route, navigation }) {
   }, [navigation, isEditing]);
 
   //all three functions should close modal
+  //delete also wants to makes api call
   function deleteExpenseHandler() {
     //order of function call doesnt matter since it runs synchronously
     expensesCtx.deleteExpense(editedExpenseId);
@@ -39,6 +40,7 @@ export default function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
+  //want to send expense to backend and maybe save local copy of expense
   function confirmHandler(expenseData) {
     //since same handler for update/add -> first check mode
     if (isEditing) {
