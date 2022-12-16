@@ -2,9 +2,9 @@ import { View, StyleSheet } from 'react-native';
 import React, { useContext, useLayoutEffect } from 'react';
 import { GlobalStyles } from '../constants/styles';
 import IconButton from '../components/UI/IconButton';
-import Button from '../components/UI/Button';
 import { ExpensesContext } from '../store/expenses-context';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
+import { storeExpense } from '../util/http';
 
 //add two 'modes' of this screen
 //if have expense id -> editing
@@ -46,6 +46,7 @@ export default function ManageExpense({ route, navigation }) {
     if (isEditing) {
       expensesCtx.updateExpense(editedExpenseId, expenseData);
     } else {
+      storeExpense(expenseData);
       expensesCtx.addExpense(expenseData);
     }
     navigation.goBack();
