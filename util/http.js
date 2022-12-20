@@ -4,12 +4,11 @@ const BACKEND_URL = 'https://react-native-expenses-7dd1c-default-rtdb.firebaseio
 
 //create helper functions that help with sending requests
 export async function storeExpense(expenseData) {
-  //url from firebase database
   const response = await axios.post(BACKEND_URL + '/expenses.json',
     expenseData);
-    //name property holds auto generated id from firebase
-    const id = response.data.name;
-    return id;
+  //name property holds auto generated id from firebase
+  const id = response.data.name;
+  return id;
 }
 
 export async function fetchExpenses() {
@@ -31,6 +30,14 @@ export async function fetchExpenses() {
   return expenses;
 }
 
+
+export function updateExpense(id, expenseData) {
+  return axios.put(BACKEND_URL + `/expenses/${id}.json`, expenseData);
+}
+
+export function deleteExpense(id) {
+  return axios.delete(BACKEND_URL + `/expenses/${id}.json`);
+}
 
 //post request to make new data
 

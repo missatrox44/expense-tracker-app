@@ -4,7 +4,7 @@ import { GlobalStyles } from '../constants/styles';
 import IconButton from '../components/UI/IconButton';
 import { ExpensesContext } from '../store/expenses-context';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
-import { storeExpense } from '../util/http';
+import { storeExpense, updateExpense, deleteExpense } from '../util/http';
 
 //add two 'modes' of this screen
 //if have expense id -> editing
@@ -29,7 +29,8 @@ export default function ManageExpense({ route, navigation }) {
 
   //all three functions should close modal
   //delete also wants to makes api call
-  function deleteExpenseHandler() {
+  async function deleteExpenseHandler() {
+    await deleteExpense(editedExpenseId);
     //order of function call doesnt matter since it runs synchronously
     expensesCtx.deleteExpense(editedExpenseId);
     navigation.goBack();
@@ -44,11 +45,14 @@ export default function ManageExpense({ route, navigation }) {
   async function confirmHandler(expenseData) {
     //since same handler for update/add -> first check mode
     if (isEditing) {
+      //update data locally first
       expensesCtx.updateExpense(editedExpenseId, expenseData);
+      //then send updated data to backend
+      await updateExpense(editedExpenseId, expenseData);
     } else {
       const id = await storeExpense(expenseData);
       //add extra id field which is same id from backend
-      expensesCtx.addExpense({...expenseData, id: id});
+      expensesCtx.addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
   }
@@ -60,7 +64,7 @@ export default function ManageExpense({ route, navigation }) {
         onSubmit={confirmHandler}
         defaultValues={selectedExpense}
         submitButtonLabel={isEditing ? 'Update' : 'Add'} />
-      
+
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
