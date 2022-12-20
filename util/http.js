@@ -26,7 +26,6 @@ export async function fetchExpenses() {
     expenses.push(expenseObj);
   }
   return expenses;
-
 }
 
 

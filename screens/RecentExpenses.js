@@ -1,5 +1,5 @@
 
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ExpensesOutput from '../components/expensesOutput/ExpensesOutput'
 import { ExpensesContext } from '../store/expenses-context'
 import { getDateMinusDays } from '../util/date';
@@ -7,12 +7,14 @@ import { fetchExpenses } from '../util/http';
 
 export default function RecentExpenses() {
   const expensesCtx = useContext(ExpensesContext);
+  // const [fetchedExpenses, setFetchedExpenses] = useState([]);
 
   //useEffect should NOT return a promise
   //nest function into async function to work around that
   useEffect(() => {
     async function getExpenses() {
-     const expenses =  await fetchExpenses();
+      const expenses = await fetchExpenses();
+      expensesCtx.setExpenses(expenses);
     }
     getExpenses();
   }, [])
