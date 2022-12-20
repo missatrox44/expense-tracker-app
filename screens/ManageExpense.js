@@ -41,13 +41,14 @@ export default function ManageExpense({ route, navigation }) {
   }
 
   //want to send expense to backend and maybe save local copy of expense
-  function confirmHandler(expenseData) {
+  async function confirmHandler(expenseData) {
     //since same handler for update/add -> first check mode
     if (isEditing) {
       expensesCtx.updateExpense(editedExpenseId, expenseData);
     } else {
-      storeExpense(expenseData);
-      expensesCtx.addExpense(expenseData);
+      const id = await storeExpense(expenseData);
+      //add extra id field which is same id from backend
+      expensesCtx.addExpense({...expenseData, id: id});
     }
     navigation.goBack();
   }
