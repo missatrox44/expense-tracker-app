@@ -6,6 +6,7 @@ import { ExpensesContext } from '../store/expenses-context';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import { storeExpense, updateExpense, deleteExpense } from '../util/http';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 //add two 'modes' of this screen
 //if have expense id -> editing
@@ -14,6 +15,7 @@ import LoadingOverlay from '../components/UI/LoadingOverlay';
 export default function ManageExpense({ route, navigation }) {
   //manage laoding state
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState();
 
 
   //create context reference here to access handler functions
@@ -35,11 +37,17 @@ export default function ManageExpense({ route, navigation }) {
   //all three functions should close modal
   //delete also wants to makes api call
   async function deleteExpenseHandler() {
-    setIsSubmitting(true)
-    await deleteExpense(editedExpenseId);
-    //order of function call doesnt matter since it runs synchronously
-    expensesCtx.deleteExpense(editedExpenseId);
-    navigation.goBack();
+    setIsSubmitting(true);
+    try {
+      await deleteExpense(editedExpenseId);
+      //order of function call doesnt matter since it runs synchronously
+      expensesCtx.deleteExpense(editedExpenseId);
+      navigation.goBack();
+    }
+    catch {
+      setError('Could not delete expense - please try again');
+      setIsSubmitting(false);
+    }
   }
 
   function cancelHandler() {
@@ -50,18 +58,27 @@ export default function ManageExpense({ route, navigation }) {
   //want to send expense to backend and maybe save local copy of expense
   async function confirmHandler(expenseData) {
     setIsSubmitting(true);
-    //since same handler for update/add -> first check mode
-    if (isEditing) {
-      //update data locally first
-      expensesCtx.updateExpense(editedExpenseId, expenseData);
-      //then send updated data to backend
-      await updateExpense(editedExpenseId, expenseData);
-    } else {
-      const id = await storeExpense(expenseData);
-      //add extra id field which is same id from backend
-      expensesCtx.addExpense({ ...expenseData, id: id });
+    try {
+      //since same handler for update/add -> first check mode
+      if (isEditing) {
+        //update data locally first
+        expensesCtx.updateExpense(editedExpenseId, expenseData);
+        //then send updated data to backend
+        await updateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = await storeExpense(expenseData);
+        //add extra id field which is same id from backend
+        expensesCtx.addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+    } catch (error) {
+      setError('Count not save data - please try again later.')
+      setIsSubmitting(false);
     }
-    navigation.goBack();
+  }
+
+  if (error && !isSubmitting) {
+    return <ErrorOverlay message={error} />
   }
 
   if (isSubmitting) {
