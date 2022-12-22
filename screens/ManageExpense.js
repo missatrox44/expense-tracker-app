@@ -1,16 +1,21 @@
 import { View, StyleSheet } from 'react-native';
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect, useState } from 'react';
 import { GlobalStyles } from '../constants/styles';
 import IconButton from '../components/UI/IconButton';
 import { ExpensesContext } from '../store/expenses-context';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import { storeExpense, updateExpense, deleteExpense } from '../util/http';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
 //add two 'modes' of this screen
 //if have expense id -> editing
 //if no expense id -> adding
 //route prop provided by Navigation and can use to extract id parameter
 export default function ManageExpense({ route, navigation }) {
+  //manage laoding state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+
   //create context reference here to access handler functions
   const expensesCtx = useContext(ExpensesContext);
   //find out why it was to open: edit or add?
@@ -30,6 +35,7 @@ export default function ManageExpense({ route, navigation }) {
   //all three functions should close modal
   //delete also wants to makes api call
   async function deleteExpenseHandler() {
+    setIsSubmitting(true)
     await deleteExpense(editedExpenseId);
     //order of function call doesnt matter since it runs synchronously
     expensesCtx.deleteExpense(editedExpenseId);
@@ -43,6 +49,7 @@ export default function ManageExpense({ route, navigation }) {
 
   //want to send expense to backend and maybe save local copy of expense
   async function confirmHandler(expenseData) {
+    setIsSubmitting(true);
     //since same handler for update/add -> first check mode
     if (isEditing) {
       //update data locally first
@@ -55,6 +62,10 @@ export default function ManageExpense({ route, navigation }) {
       expensesCtx.addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
+  }
+
+  if (isSubmitting) {
+    return <LoadingOverlay />
   }
 
   return (
