@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = 'https://react-native-expenses-7dd1c-default-rtdb.firebaseio.com'
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 //create helper functions that help with sending requests
 export async function storeExpense(expenseData) {
